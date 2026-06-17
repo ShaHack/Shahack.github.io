@@ -1,31 +1,339 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Gokul S Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gokul S | Cybersecurity Portfolio</title>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #06b6d4; /* Cyan accent */
+            --accent-hover: #0891b2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .animate-fade-up {
+            opacity: 0;
+            animation: fadeUp 0.8s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 2rem;
+        }
+
+        h1 {
+            font-family: 'Fira Code', monospace;
+            font-size: 3.5rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        .role-title {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin-bottom: 2rem;
+        }
+
+        .social-links a {
+            color: var(--text-main);
+            font-size: 1.5rem;
+            margin-right: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+        }
+
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            font-family: 'Fira Code', monospace;
+            font-size: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 3px;
+            background-color: var(--accent);
+            bottom: -10px;
+            left: 0;
+        }
+
+        /* --- Skills Grid --- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-card {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .skill-icon {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .skill-name {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        /* --- Projects Grid --- */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: transform 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background-color: var(--accent);
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .project-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        .project-desc {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .project-links a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .project-links a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--card-bg);
+            margin-top: 3rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.5rem; }
+            .role-title { font-size: 1.2rem; }
+        }
+    </style>
 </head>
 <body>
-<h1>Gokul S</h1>
-<h2>Cybersecurity Student</h2>
 
-<p>Final Year B.E CSE (Cyber Security)</p>
+    <div class="container">
+        <!-- Hero Section -->
+        <header class="animate-fade-up">
+            <h1>Gokul S</h1>
+            <div class="role-title">Cybersecurity Student</div>
+            <p class="subtitle">B.E. Computer Science (Cybersecurity) | Passionate about network security, ethical hacking, and vulnerability assessment.</p>
+            
+            <div class="social-links">
+                <a href="https://linkedin.com/in/gokulnetwork" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+                <a href="https://github.com/ShaHack" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="mailto:sgokul.network@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+        </header>
 
-<h3>Skills</h3>
-<ul>
-<li>Linux</li>
-<li>Networking</li>
-<li>Web Application Security</li>
-<li>Python</li>
-<li>Wireshark</li>
-<li>Nmap</li>
-<li>Burp Suite</li>
-</ul>
+        <!-- Skills Section -->
+        <section id="skills" class="animate-fade-up delay-1">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <i class="fa-brands fa-linux skill-icon"></i>
+                    <div class="skill-name">Linux</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-solid fa-network-wired skill-icon"></i>
+                    <div class="skill-name">Networking</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-solid fa-shield-halved skill-icon"></i>
+                    <div class="skill-name">Web App Security</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-brands fa-python skill-icon"></i>
+                    <div class="skill-name">Python</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-solid fa-magnifying-glass-chart skill-icon"></i>
+                    <div class="skill-name">Wireshark</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-solid fa-radar-border skill-icon"></i>
+                    <div class="skill-name">Nmap</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-solid fa-bug skill-icon"></i>
+                    <div class="skill-name">Burp Suite</div>
+                </div>
+                <div class="skill-card">
+                    <i class="fa-solid fa-hard-drive skill-icon"></i>
+                    <div class="skill-name">Digital Forensics</div>
+                </div>
+            </div>
+        </section>
 
-<h3>Projects</h3>
-<ul>
-<li>Network Security Honeypot Lab</li>
-<li>Campus Shield</li>
-<li>Fact Checker Browser Extension</li>
-</ul>
+        <!-- Projects Section -->
+        <section id="projects" class="animate-fade-up delay-2">
+            <h2 class="section-title">Key Projects</h2>
+            <div class="projects-grid">
+                
+                <div class="project-card">
+                    <h3 class="project-title"><i class="fa-solid fa-server" style="margin-right: 8px;"></i> Network Security Honeypot Lab</h3>
+                    <p class="project-desc">Configured and deployed honeypots to actively monitor, log, and analyze malicious network traffic and attack patterns.</p>
+                </div>
 
+                <div class="project-card">
+                    <h3 class="project-title"><i class="fa-solid fa-building-shield" style="margin-right: 8px;"></i> Campus Shield</h3>
+                    <p class="project-desc">Designed a web-based campus safety concept using HTML, CSS, and JavaScript to improve security awareness and incident reporting.</p>
+                </div>
+
+                <div class="project-card">
+                    <h3 class="project-title"><i class="fa-solid fa-check-double" style="margin-right: 8px;"></i> Fact Checker Browser Extension</h3>
+                    <p class="project-desc">Built a custom browser extension utilizing OSINT principles to assist users in verifying online information and mitigating misinformation.</p>
+                </div>
+
+                <div class="project-card">
+                    <h3 class="project-title"><i class="fa-solid fa-hand-sparkles" style="margin-right: 8px;"></i> Sign Detection System</h3>
+                    <p class="project-desc">Developed a hand gesture recognition system leveraging Python and OpenCV to process and interpret real-time video input.</p>
+                </div>
+
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Gokul S. Built with HTML, CSS & <i class="fa-solid fa-heart" style="color: var(--accent);"></i></p>
+    </footer>
+
+    <!-- Simple Scroll Animation Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                        entry.target.style.opacity = 1;
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const animatedElements = document.querySelectorAll('.animate-fade-up');
+            animatedElements.forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        });
+    </script>
 </body>
 </html>
