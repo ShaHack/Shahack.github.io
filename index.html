@@ -11,12 +11,12 @@
     
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
+            --bg-color: #070b14; /* Deep hacker terminal background */
+            --card-bg: rgba(30, 41, 59, 0.6); /* Semi-transparent for glass effect */
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-            --accent: #06b6d4; /* Cyan accent */
-            --accent-hover: #0891b2;
+            --accent: #00ffcc; /* Cyberpunk pentester cyan/green */
+            --accent-hover: #00ccaa;
         }
 
         * {
@@ -33,15 +33,21 @@
             overflow-x: hidden;
         }
 
+        /* Interactive Canvas Background */
+        #cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            pointer-events: none; /* Allows clicking on links over the canvas */
+        }
+
         /* --- Animations --- */
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
         }
 
         .animate-fade-up {
@@ -51,13 +57,14 @@
 
         .delay-1 { animation-delay: 0.2s; }
         .delay-2 { animation-delay: 0.4s; }
-        .delay-3 { animation-delay: 0.6s; }
 
         /* --- Layout --- */
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 2rem;
+            position: relative;
+            z-index: 1;
         }
 
         header {
@@ -73,6 +80,7 @@
             font-size: 3.5rem;
             color: var(--text-main);
             margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
         }
 
         .role-title {
@@ -80,6 +88,7 @@
             color: var(--accent);
             margin-bottom: 1rem;
             font-weight: 600;
+            font-family: 'Fira Code', monospace;
         }
 
         .subtitle {
@@ -93,11 +102,14 @@
             color: var(--text-main);
             font-size: 1.5rem;
             margin-right: 1.5rem;
-            transition: color 0.3s;
+            transition: color 0.3s, transform 0.3s;
+            display: inline-block;
         }
 
         .social-links a:hover {
             color: var(--accent);
+            transform: translateY(-3px);
+            text-shadow: 0 0 10px var(--accent);
         }
 
         section {
@@ -120,6 +132,17 @@
             background-color: var(--accent);
             bottom: -10px;
             left: 0;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* --- Glassmorphism Cards --- */
+        .skill-card, .project-card {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
 
         /* --- Skills Grid --- */
@@ -130,24 +153,21 @@
         }
 
         .skill-card {
-            background-color: var(--card-bg);
             padding: 1.5rem;
-            border-radius: 8px;
             text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid transparent;
         }
 
         .skill-card:hover {
             transform: translateY(-5px);
             border-color: var(--accent);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 20px rgba(0, 255, 204, 0.1);
         }
 
         .skill-icon {
             font-size: 2.5rem;
             color: var(--accent);
             margin-bottom: 1rem;
+            filter: drop-shadow(0 0 5px rgba(0, 255, 204, 0.3));
         }
 
         .skill-name {
@@ -163,10 +183,7 @@
         }
 
         .project-card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
             padding: 2rem;
-            transition: transform 0.3s;
             position: relative;
             overflow: hidden;
         }
@@ -177,10 +194,12 @@
             top: 0; left: 0;
             width: 4px; height: 100%;
             background-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
         }
 
         .project-card:hover {
             transform: translateY(-5px);
+            border-color: rgba(0, 255, 204, 0.3);
         }
 
         .project-title {
@@ -195,26 +214,16 @@
             font-size: 0.95rem;
         }
 
-        .project-links a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .project-links a:hover {
-            text-decoration: underline;
-        }
-
         footer {
             text-align: center;
             padding: 2rem;
             color: var(--text-muted);
-            border-top: 1px solid var(--card-bg);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
             margin-top: 3rem;
+            position: relative;
+            z-index: 1;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             .role-title { font-size: 1.2rem; }
@@ -223,17 +232,21 @@
 </head>
 <body>
 
+    <!-- Interactive Network Background -->
+    <canvas id="cyber-bg"></canvas>
+
     <div class="container">
         <!-- Hero Section -->
         <header class="animate-fade-up">
             <h1>Gokul S</h1>
-            <div class="role-title">Cybersecurity Student</div>
-            <p class="subtitle">B.E. Computer Science (Cybersecurity) | Passionate about network security, ethical hacking, and vulnerability assessment.</p>
+            <div class="role-title">>_ Cybersecurity Student & Ethical Hacker</div>
+            <p class="subtitle">B.E. Computer Science (Cybersecurity) | Passionate about network security, red teaming, and vulnerability assessment.</p>
             
             <div class="social-links">
                 <a href="https://linkedin.com/in/gokulnetwork" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
                 <a href="https://github.com/ShaHack" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i></a>
-                <a href="mailto:sgokul.network@gmail.com" title="Email"><i class="fa-solid fa-envelope"></i></a>
+                <!-- Updated Mail Link to open directly in Gmail -->
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=sgokul.network@gmail.com" target="_blank" title="Gmail"><i class="fa-solid fa-envelope"></i></a>
             </div>
         </header>
 
@@ -262,7 +275,8 @@
                     <div class="skill-name">Wireshark</div>
                 </div>
                 <div class="skill-card">
-                    <i class="fa-solid fa-radar-border skill-icon"></i>
+                    <!-- Fixed Nmap Icon -->
+                    <i class="fa-solid fa-satellite-dish skill-icon"></i>
                     <div class="skill-name">Nmap</div>
                 </div>
                 <div class="skill-card">
@@ -282,22 +296,22 @@
             <div class="projects-grid">
                 
                 <div class="project-card">
-                    <h3 class="project-title"><i class="fa-solid fa-server" style="margin-right: 8px;"></i> Network Security Honeypot Lab</h3>
+                    <h3 class="project-title"><i class="fa-solid fa-server" style="margin-right: 8px; color: var(--accent);"></i> Network Security Honeypot Lab</h3>
                     <p class="project-desc">Configured and deployed honeypots to actively monitor, log, and analyze malicious network traffic and attack patterns.</p>
                 </div>
 
                 <div class="project-card">
-                    <h3 class="project-title"><i class="fa-solid fa-building-shield" style="margin-right: 8px;"></i> Campus Shield</h3>
+                    <h3 class="project-title"><i class="fa-solid fa-building-shield" style="margin-right: 8px; color: var(--accent);"></i> Campus Shield</h3>
                     <p class="project-desc">Designed a web-based campus safety concept using HTML, CSS, and JavaScript to improve security awareness and incident reporting.</p>
                 </div>
 
                 <div class="project-card">
-                    <h3 class="project-title"><i class="fa-solid fa-check-double" style="margin-right: 8px;"></i> Fact Checker Browser Extension</h3>
+                    <h3 class="project-title"><i class="fa-solid fa-check-double" style="margin-right: 8px; color: var(--accent);"></i> Fact Checker Browser Extension</h3>
                     <p class="project-desc">Built a custom browser extension utilizing OSINT principles to assist users in verifying online information and mitigating misinformation.</p>
                 </div>
 
                 <div class="project-card">
-                    <h3 class="project-title"><i class="fa-solid fa-hand-sparkles" style="margin-right: 8px;"></i> Sign Detection System</h3>
+                    <h3 class="project-title"><i class="fa-solid fa-hand-sparkles" style="margin-right: 8px; color: var(--accent);"></i> Sign Detection System</h3>
                     <p class="project-desc">Developed a hand gesture recognition system leveraging Python and OpenCV to process and interpret real-time video input.</p>
                 </div>
 
@@ -306,11 +320,120 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Gokul S. Built with HTML, CSS & <i class="fa-solid fa-heart" style="color: var(--accent);"></i></p>
+        <p>&copy; 2026 Gokul S. Built with HTML, CSS & <i class="fa-solid fa-code" style="color: var(--accent);"></i></p>
     </footer>
 
-    <!-- Simple Scroll Animation Script -->
+    <!-- Interactive Background Script -->
     <script>
+        const canvas = document.getElementById('cyber-bg');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height, particles;
+        
+        // Mouse interaction tracker
+        let mouse = { x: null, y: null, radius: 150 };
+
+        window.addEventListener('mousemove', (event) => {
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+        
+        // When mouse leaves the window, stop connecting
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            
+            // Adjust particle count based on screen size
+            let particleCount = (width * height) / 15000;
+            
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 1.5; // Speed X
+                this.vy = (Math.random() - 0.5) * 1.5; // Speed Y
+                this.radius = Math.random() * 2 + 1; // Size
+            }
+
+            update() {
+                // Move particle
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Bounce off edges
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(0, 255, 204, 0.8)';
+                ctx.fill();
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, width, height);
+            
+            particles.forEach((p, index) => {
+                p.update();
+                p.draw();
+                
+                // Connect particles to each other
+                for (let j = index + 1; j < particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 255, 204, ${1 - dist/120})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+                
+                // Connect particles to mouse
+                if (mouse.x != null && mouse.y != null) {
+                    const dx = p.x - mouse.x;
+                    const dy = p.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < mouse.radius) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 255, 204, ${1 - dist/mouse.radius})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('resize', init);
+        
+        // Start animation
+        init();
+        animate();
+        
+        // Scroll Animation Logic
         document.addEventListener("DOMContentLoaded", () => {
             const observerOptions = {
                 root: null,
